@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "watch": "nodemon --watch . -e js,json app.js"
+  }
+}
