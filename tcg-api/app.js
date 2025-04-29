@@ -1,9 +1,6 @@
 const express = require("express");
 const app = express();
-
-app.listen(3008, () => {
- console.log("Serveur démarré sur http://localhost:3008");
-});
+// const users = require("./users");
 
 
 app.get("/", (req, res) => {
@@ -16,4 +13,11 @@ app.get("/", (req, res) => {
    });
 
    app.use(express.urlencoded({ extended: true }));
+
+//    app.post("/register", users.RegisterUser);
+   
+
+   app.listen(3000, () => {
+    console.log("Serveur démarré sur http://localhost:3000");
+   });
    
