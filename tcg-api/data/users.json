@@ -5,5 +5,12 @@
         "password": "exemple",
         "collection": [],
         "token": "aeb2bhegciegea"
+    },
+    {
+        "id": 2,
+        "username": "amir",
+        "password": "said",
+        "collection": [],
+        "token": "12e8bhegcjfifj"
     }
 ]

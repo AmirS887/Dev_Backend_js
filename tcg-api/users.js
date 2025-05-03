@@ -29,7 +29,7 @@ const RegisterUser = (req, res) => {
         return;
     }
 
-    // Lire le fichier users.json
+    // Lecture du fichier users.json
     let users = [];
     try {
         const data = fs.readFileSync(usersFilePath, "utf-8");
@@ -100,8 +100,47 @@ const LoginUser = (req, res) => {
     });
 };
 
+// Fonction pour récupérer les infos d'un utilisateur avec son token
+const GetUser = (req, res) => {
+    // 1. Récupérer le token depuis l'URL
+    const token = req.query.token;
+    
+    // 2. Vérifier que le token existe
+    if (!token) {
+        return res.status(401).json({ message: "Vous devez fournir un token" });
+    }
+    
+    // 3. Lire le fichier des utilisateurs
+    try {
+        const data = fs.readFileSync(usersFilePath, "utf-8");
+        const users = JSON.parse(data);
+        
+        // 4. Chercher l'utilisateur qui a ce token
+        const user = users.find(u => u.token === token);
+        
+        // 5. Si aucun utilisateur n'a ce token
+        if (!user) {
+            return res.status(401).json({ message: "Token invalide" });
+        }
+        
+        // 6. Renvoyer les informations de l'utilisateur (sans le mot de passe)
+        res.json({
+            message: "Utilisateur trouvé",
+            data: {
+                id: user.id,
+                username: user.username,
+                collection: user.collection
+            }
+        });
+        
+    } catch (error) {
+        // En cas d'erreur
+        res.status(500).json({ message: "Erreur lors de la lecture des utilisateurs" });
+    }
+};
 
 module.exports = {
     RegisterUser,
-    LoginUser
+    LoginUser,
+    GetUser
 };
