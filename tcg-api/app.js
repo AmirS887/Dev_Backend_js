@@ -1,7 +1,10 @@
 const express = require("express");
 const app = express();
-// const users = require("./users");
+const users = require("./users");
 
+// Middleware nécessaire pour traiter les données JSON dans les requêtes
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
     res.json(
@@ -12,12 +15,9 @@ app.get("/", (req, res) => {
     );
    });
 
-   app.use(express.urlencoded({ extended: true }));
-
-//    app.post("/register", users.RegisterUser);
+app.post("/register", users.RegisterUser);
    
-
-   app.listen(3000, () => {
+app.listen(3000, () => {
     console.log("Serveur démarré sur http://localhost:3000");
    });
    
