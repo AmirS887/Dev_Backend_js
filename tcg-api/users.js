@@ -36,38 +36,7 @@ const RegisterUser = (req, res) => {
         users = [];
     }
 
-    // Vérifier si l'utilisateur existe déjà
-    const userExists = users.some(user => user.username === username);
-    if (userExists) {
-        return res.status(400).json({"message": "Cet utilisateur existe déjà"});
-    }
-    
-    // Créer le nouvel utilisateur
-    const newUser = {
-        id: users.length > 0 ? Math.max(...users.map(user => user.id)) + 1 : 1,
-        username,
-        password,
-        collection: []
-    };
-    
-    // Ajouter l'utilisateur à la liste
-    users.push(newUser);
-    
-    // Enregistrer la liste mise à jour
-    try {
-        fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 4));
-        
-        // Répondre avec les informations du nouvel utilisateur (sans le mot de passe)
-        return res.status(201).json({
-            message: "Utilisateur créé avec succès",
-            user: {
-                id: newUser.id,
-                username: newUser.username
-            }
-        });
-    } catch (error) {
-        return res.status(500).json({"message": "Erreur lors de la création de l'utilisateur"});
-    }
+    res.json({ message: "Utilisateurs lus", users});
 };
 
 const LoginUser = (req, res) => {
