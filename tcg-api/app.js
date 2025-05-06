@@ -19,8 +19,9 @@ app.post("/register", users.RegisterUser);
 
 app.post("/login", users.LoginUser);
 
-// Route pour récupérer les informations d'un utilisateur authentifié
 app.get("/user", users.GetUser);
+
+app.post("/disconnect", users.DisconnectUser)
    
 app.listen(3000, () => {
     console.log("Serveur démarré sur http://localhost:3000");

@@ -3,14 +3,13 @@
         "id": 1,
         "username": "Exemple",
         "password": "exemple",
-        "collection": [],
-        "token": "aeb2bhegciegea"
+        "collection": []
     },
     {
         "id": 2,
         "username": "amir",
         "password": "said",
         "collection": [],
-        "token": "12e8bhegcjfifj"
+        "token": "9d0ebhegfbhcgd"
     }
 ]

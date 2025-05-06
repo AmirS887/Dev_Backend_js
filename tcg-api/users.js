@@ -1,19 +1,16 @@
-// Pour manipuler les fichiers notamment la partie lecture de users.json
 const fs = require("fs");
-//Pour gerer les chemins de fichiers
 const path = require("path");
-// Pour générer des tokens d'authentification
 const TokenGenerator = require('token-generator');
 
 const usersFilePath = path.join(__dirname, 'data', "users.json");
-// Configure le générateur de tokens (options par défaut)
+// Configurer le générateur de tokens (options par défaut)
 const tokenGenerator = new TokenGenerator({
     salt: 'tcg-app-salt',
-    timestampMap: 'abcdefghij', // 10 caractères
+    timestampMap: 'abcdefghij', // 10 caractères par défaut
 });
 
 // Fonction pour gérer l'inscription d'un utilisateur
-const RegisterUser = (req, res) => {
+const RegisterUser = (req, res) => { 
     // Vérifier si le body existe
     if(!req.body) {
         res.status(400).json({"message": "Erreur : Aucune données"});
@@ -23,7 +20,7 @@ const RegisterUser = (req, res) => {
     // Récupérer les données envoyées
     const { username, password } = req.body;
     
-    // Vérifier que les champs obligatoires sont présents
+    // Vérifier si les données sont présentes
     if(!username || !password) {
         res.status(400).json({"message": "Erreur : Données manquantes"});
         return;
@@ -39,7 +36,6 @@ const RegisterUser = (req, res) => {
         users = [];
     }
 
-    // Envoyer la réponse avec les utilisateurs lus
     res.json({ message: "Utilisateurs lus", users});
 };
 
@@ -50,7 +46,6 @@ const LoginUser = (req, res) => {
         return;
     }
     
-    // Récupérer les identifiants
     const { username, password } = req.body;
     
     // Vérifier que les identifiants sont fournis
@@ -72,18 +67,17 @@ const LoginUser = (req, res) => {
     // Rechercher l'utilisateur par son username et password
     const user = users.find(u => u.username === username && u.password === password);
     
-    // Si l'utilisateur n'est pas trouvé
     if(!user) {
         return res.status(401).json({"message": "Identifiants incorrects"});
     }
     
-    // Générer un token pour l'utilisateur authentifié
+    // Génére un token pour l'utilisateur authentifié
     const token = tokenGenerator.generate();
     
-    // Mettre à jour l'utilisateur avec le token
+    // mis a jour de l'utilisateur avec le token
     user.token = token;
     
-    // Enregistrer la mise à jour dans le fichier
+    // Enregistre la mise à jour dans le fichier
     try {
         fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 4));
     } catch(error) {
@@ -91,7 +85,6 @@ const LoginUser = (req, res) => {
         return res.status(500).json({"message": "Erreur lors de l'authentification"});
     }
     
-    // Répondre avec le token
     res.json({
         message: "Authentification réussie",
         data: {
@@ -100,30 +93,27 @@ const LoginUser = (req, res) => {
     });
 };
 
-// Fonction pour récupérer les infos d'un utilisateur avec son token
 const GetUser = (req, res) => {
-    // 1. Récupérer le token depuis l'URL
+    // Récupération du token depuis l'URL
     const token = req.query.token;
     
-    // 2. Vérifier que le token existe
+    // verification du token 
     if (!token) {
         return res.status(401).json({ message: "Vous devez fournir un token" });
     }
     
-    // 3. Lire le fichier des utilisateurs
     try {
         const data = fs.readFileSync(usersFilePath, "utf-8");
         const users = JSON.parse(data);
         
-        // 4. Chercher l'utilisateur qui a ce token
+        //Chercher l'utilisateur qui a ce token
         const user = users.find(u => u.token === token);
         
-        // 5. Si aucun utilisateur n'a ce token
+     
         if (!user) {
             return res.status(401).json({ message: "Token invalide" });
         }
         
-        // 6. Renvoyer les informations de l'utilisateur (sans le mot de passe)
         res.json({
             message: "Utilisateur trouvé",
             data: {
@@ -139,8 +129,39 @@ const GetUser = (req, res) => {
     }
 };
 
+const DisconnectUser = (req, res) => {
+    // 1. Récupérer le token depuis le body de la requête
+    const { token } = req.body;
+    
+    // 2. Vérifier que le token existe
+    if (!token) {
+        return res.status(401).json({ message: "Vous devez fournir un token" });
+    }
+    
+    try {
+        const data = fs.readFileSync(usersFilePath, "utf-8");
+        const users = JSON.parse(data);
+
+        const user = users.find(u => u.token === token);
+
+        if (!user) {
+            return res.status(401).json({ message: "Token invalide" });
+        }
+
+        delete user.token;
+        
+        fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 4));
+
+        res.json({ message: "Déconnexion réussie" });
+        
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de la déconnexion" });
+    }
+};
+
 module.exports = {
     RegisterUser,
     LoginUser,
-    GetUser
+    GetUser,
+    DisconnectUser
 };
