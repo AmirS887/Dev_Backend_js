@@ -8,13 +8,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-    res.json(
-    {
-    message : "Bienvenue sur l'API TCG",
-    data : {}
-    }
-    );
-   });
+    res.sendFile(__dirname + "/index.html");
+});
+
+app.get("/register.html", (req, res) => {
+    res.sendFile(__dirname + "/register.html");
+});
 
 app.post("/register", users.RegisterUser);
 
