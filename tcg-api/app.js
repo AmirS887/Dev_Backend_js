@@ -7,22 +7,15 @@ const cards = require("./cards");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/index.html");
-});
-
-app.get("/register.html", (req, res) => {
-    res.sendFile(__dirname + "/register.html");
-});
-
+//Lis les utilisateurs
 app.post("/register", users.RegisterUser);
-
+//Permet de connecter un utilisateur gener un tolen
 app.post("/login", users.LoginUser);
 
 app.get("/user", users.GetUser);
-
+//Permet de ce deco et supprimer le token
 app.post("/disconnect", users.DisconnectUser);
-
+//Permet d'avoir les cartes 
 app.post("/booster", cards.GetBooster);
    
 app.listen(3000, () => {
