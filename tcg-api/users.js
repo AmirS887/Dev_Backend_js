@@ -93,6 +93,33 @@ const LoginUser = (req, res) => {
     });
 };
 
+/**
+ * Convertit l'ancienne structure de collection (tableau d'IDs) vers la nouvelle (objets avec id et nb)
+ * @param {Array} oldCollection - Ancienne collection (tableau d'IDs)
+ * @returns {Array} Nouvelle collection (objets avec id et nb)
+ */
+function convertOldCollectionFormat(oldCollection) {
+    if (!oldCollection || oldCollection.length === 0) {
+        return [];
+    }
+    
+    // Vérifier si c'est déjà le nouveau format
+    if (oldCollection[0] && typeof oldCollection[0] === 'object' && oldCollection[0].hasOwnProperty('id') && oldCollection[0].hasOwnProperty('nb')) {
+        return oldCollection; // Déjà au bon format
+    }
+    
+    // Convertir l'ancien format vers le nouveau
+    const cardCounts = {};
+    oldCollection.forEach(cardId => {
+        cardCounts[cardId] = (cardCounts[cardId] || 0) + 1;
+    });
+    
+    return Object.keys(cardCounts).map(cardId => ({
+        id: parseInt(cardId),
+        nb: cardCounts[cardId]
+    }));
+}
+
 const GetUser = (req, res) => {
     // Récupération du token depuis l'URL
     const token = req.query.token;
@@ -114,12 +141,21 @@ const GetUser = (req, res) => {
             return res.status(401).json({ message: "Token invalide" });
         }
         
+        // Convertir l'ancienne structure de collection vers la nouvelle si nécessaire
+        if (user.collection) {
+            user.collection = convertOldCollectionFormat(user.collection);
+            
+            // Sauvegarder la conversion dans le fichier
+            fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 4));
+        }
+        
         res.json({
             message: "Utilisateur trouvé",
             data: {
                 id: user.id,
                 username: user.username,
-                collection: user.collection
+                collection: user.collection || [],
+                lastBooster: user.lastBooster
             }
         });
         
