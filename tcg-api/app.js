@@ -3,6 +3,7 @@ const app = express();
 const users = require("./users");
 const cards = require("./cards");
 const path = require("path");
+const { connectDB } = require("./config/database");
 
 // Middleware nécessaire pour traiter les données JSON dans les requêtes
 app.use(express.json());
@@ -26,8 +27,33 @@ app.get("/user", users.GetUser);
 app.post("/disconnect", users.DisconnectUser);
 app.post("/booster", cards.GetBooster);
 app.get("/cards", cards.GetAllCards);
+app.post("/convert", cards.ConvertCard);
 
-app.listen(3000, () => {
-    console.log("Serveur démarré sur http://localhost:3000");
+// Fonction de démarrage du serveur
+async function startServer() {
+    try {
+        // Connexion à MongoDB
+        await connectDB();
+        
+        // Démarrage du serveur Express
+        app.listen(3000, () => {
+            console.log("🚀 Serveur démarré sur http://localhost:3000");
+            console.log("📊 Base de données MongoDB connectée");
+        });
+    } catch (error) {
+        console.error("❌ Erreur au démarrage:", error);
+        process.exit(1);
+    }
+}
+
+// Gestion propre de l'arrêt du serveur
+process.on('SIGINT', async () => {
+    console.log('\n🔄 Arrêt du serveur en cours...');
+    const { closeDB } = require("./config/database");
+    await closeDB();
+    process.exit(0);
 });
+
+// Démarrage de l'application
+startServer();
    

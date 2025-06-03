@@ -149,13 +149,20 @@ const GetUser = (req, res) => {
             fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 4));
         }
         
+        // Initialiser currency si elle n'existe pas
+        if (user.currency === undefined) {
+            user.currency = 0;
+            fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 4));
+        }
+        
         res.json({
             message: "Utilisateur trouvé",
             data: {
                 id: user.id,
                 username: user.username,
                 collection: user.collection || [],
-                lastBooster: user.lastBooster
+                lastBooster: user.lastBooster,
+                currency: user.currency
             }
         });
         

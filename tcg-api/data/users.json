@@ -3,14 +3,15 @@
         "id": 1,
         "username": "Exemple",
         "password": "exemple",
+        "currency": 640,
         "collection": [
             {
                 "id": 25,
-                "nb": 4
+                "nb": 1
             },
             {
                 "id": 150,
-                "nb": 5
+                "nb": 1
             },
             {
                 "id": 4,
@@ -26,7 +27,7 @@
             },
             {
                 "id": 3,
-                "nb": 3
+                "nb": 4
             },
             {
                 "id": 9,
@@ -46,7 +47,7 @@
             },
             {
                 "id": 136,
-                "nb": 3
+                "nb": 5
             },
             {
                 "id": 68,
@@ -70,11 +71,11 @@
             },
             {
                 "id": 18,
-                "nb": 2
+                "nb": 3
             },
             {
                 "id": 135,
-                "nb": 2
+                "nb": 3
             },
             {
                 "id": 133,
@@ -82,7 +83,7 @@
             },
             {
                 "id": 149,
-                "nb": 3
+                "nb": 1
             },
             {
                 "id": 123,
@@ -107,15 +108,32 @@
             {
                 "id": 124,
                 "nb": 1
+            },
+            {
+                "id": 39,
+                "nb": 1
+            },
+            {
+                "id": 143,
+                "nb": 2
+            },
+            {
+                "id": 132,
+                "nb": 1
+            },
+            {
+                "id": 12,
+                "nb": 1
             }
         ],
-        "lastBooster": 1748330694224,
-        "token": "2f85bheiddbjdj"
+        "lastBooster": 1748964692006,
+        "token": "473ebheijghbge"
     },
     {
         "id": 2,
         "username": "amir",
         "password": "said",
+        "currency": 0,
         "collection": [
             {
                 "id": 25,
